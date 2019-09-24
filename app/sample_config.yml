@@ -1,0 +1,8 @@
+default:
+  nycdbconnection:
+    driver: 'Postgres'
+    host: 'localhost'
+    user: 'xxx'
+    password: 'xxx'
+    port: 5432
+    dbname: 'nycdb'
