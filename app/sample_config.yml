@@ -1,7 +1,7 @@
 default:
   nycdbconnection:
     driver: 'Postgres'
-    host: 'localhost'
+    host: 'localhost' # use 'host.docker.internal' if running locally in docker
     user: 'xxx'
     password: 'xxx'
     port: 5432

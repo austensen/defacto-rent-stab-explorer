@@ -73,7 +73,6 @@ Temporary Items
 # ==========================
 config.yml
 /rsconnect/
+/logs_for_inspection/
 todo.md
-Dockerfile
 shiny-server.conf
-shiny-server.sh
