@@ -15,7 +15,8 @@ server <- function(input, output, session) {
       hpd_violation_count,
       hpd_comp_or_viol_apt,
       ecb_violation_count,
-      oath_hearing_count
+      oath_hearing_count,
+      hpd_vacate_order_count
     FROM defacto_bk_bbl_details
   ')
   
@@ -90,5 +91,19 @@ server <- function(input, output, session) {
     download_file_slug = "oath-hearing-details", 
     dataset_name = "Oath Hearings"
   )
+
+  # HPD Vacate Orders -------------------------------------------------------
+  
+  callModule(
+    module = detailsTable, 
+    id = "hpdvacate_details_table", 
+    .con = con,
+    selected_bbl = reactive(input$bbl), 
+    details_col = "hpdvacate_details", 
+    download_file_slug = "hpd-vacate-orders-details", 
+    dataset_name = "HPD Vacate Orders"
+  )
+  
+  
   
 }

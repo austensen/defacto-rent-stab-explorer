@@ -25,5 +25,11 @@ EXECUTE PROCEDURE refresh_defacto_bk_bbl_details();
 
 CREATE TRIGGER refresh_defacto_bk_bbl_details 
 AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE 
-ON hpd_complaints 
-FOR EACH STATEMENT EXECUTE PROCEDURE refresh_defacto_bk_bbl_details();
+ON hpd_complaints FOR EACH STATEMENT 
+EXECUTE PROCEDURE refresh_defacto_bk_bbl_details();
+
+
+CREATE TRIGGER refresh_defacto_bk_bbl_details 
+AFTER INSERT OR UPDATE OR DELETE OR TRUNCATE 
+ON hpdvacate_orders FOR EACH STATEMENT 
+EXECUTE PROCEDURE refresh_defacto_bk_bbl_details();

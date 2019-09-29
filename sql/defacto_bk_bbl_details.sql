@@ -1,25 +1,27 @@
-CREATE MATERIALIZED VIEW defacto_bk_bbl_details AS (
+DROP MATERIALIZED VIEW IF EXISTS defacto_bk_bbl_details;
+CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 	SELECT 
 		p.bbl,
 		(p.address || ', ' || p.borough || ', NY ' || p.zipcode) AS address,
 		p.unitsres AS residential_units,
 
-		hpd_cv.hpd_complaint_count,
-		hpd_cv.hpd_violation_count,
+		coalesce(hpd_cv.hpd_complaint_count, 0) AS hpd_complaint_count,
+		coalesce(hpd_cv.hpd_violation_count, 0) AS hpd_violation_count,
 		hpd_cv.hpd_comp_or_viol_apt,
-
-		-- TODO: Incorporate HPD vacate orders (hpd_vacateorders)
 
 		-- TODO: make a column with a single value for bbl for indicator of 
 		-- owner_in_building by looking in all the details.
 
-		json_array_length(ecb.ecb_details) as ecb_violation_count,
+		coalesce(json_array_length(ecb.ecb_details), 0) as ecb_violation_count,
 		ecb.ecb_details,
 
 		-- TODO: figure out dob_complaints, see below
 
-		json_array_length(oath.oath_details) as oath_hearing_count,
-		oath.oath_details
+		coalesce(json_array_length(oath.oath_details), 0) as oath_hearing_count,
+		oath.oath_details,
+
+		coalesce(json_array_length(hpdvacate.hpdvacate_details), 0) as hpd_vacate_order_count,
+		hpdvacate.hpdvacate_details
 	FROM pluto_18v2 AS p
 	LEFT JOIN LATERAL (
 		-- For each BBL get an indicator of the presence of any ECB violations for
@@ -127,6 +129,21 @@ CREATE MATERIALIZED VIEW defacto_bk_bbl_details AS (
 			WHERE bbl = p.bbl
 		) AS cv
 	) AS hpd_cv ON true
+	LEFT JOIN LATERAL (
+		-- For each BBL get an indicator of the presence of any HPD Vacate Orders 
+		-- and all relevant details of the orders.
+		SELECT
+			array_to_json(array_agg(row_to_json(hpdvacate_inner))) AS hpdvacate_details
+		FROM (
+			SELECT
+				primaryvacatereason AS hpdvacate_primary_reason,
+				vacateeffectivedate AS hpdvacate_effective_date,
+				rescinddate AS hpdvacate_rescind_date,
+				numberofvacatedunits AS hpdvacate_units_vacated
+			FROM hpd_vacateorders
+			WHERE bbl = p.bbl -- test bbl: '3012090052'
+			) as hpdvacate_inner
+	) AS hpdvacate ON true
 	WHERE 
 		p.bbl ~ '^3' AND
 		p.unitsres between 1 and 5 AND

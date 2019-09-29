@@ -68,23 +68,28 @@ detailsTable <- function(input, output, session,
   
 }
 
-details_layout <- function(name = c("ecb_details", "oath_details")) {
+details_layout <- function(name = c("ecb_details", "oath_details", "hpdvacate_details")) {
   name <- match.arg(name)
   switch(name,
     ecb_details = "
-    ecb_owner_in_building text,
-    ecb_owner_address text,
-    ecb_violation_status text,
-    ecb_hearing_status text,
-    ecb_issue_date date,
-    ecb_hearing_date date,
-    ecb_served_date date,
-    ecb_violation_description text",
+      ecb_owner_in_building text,
+      ecb_owner_address text,
+      ecb_violation_status text,
+      ecb_hearing_status text,
+      ecb_issue_date date,
+      ecb_hearing_date date,
+      ecb_served_date date,
+      ecb_violation_description text",
     oath_details = "
-    oath_owner_in_building text,
-    oath_owner_address text,
-    oath_violation_date date,
-    oath_hearing_status text,
-    oath_hearing_result text"
+      oath_owner_in_building text,
+      oath_owner_address text,
+      oath_violation_date date,
+      oath_hearing_status text,
+      oath_hearing_result text",
+    hpdvacate_details = "
+      hpdvacate_primary_reason text,
+      hpdvacate_effective_date date,
+      hpdvacate_rescind_date date,
+      hpdvacate_units_vacated integer"
   )
 }
