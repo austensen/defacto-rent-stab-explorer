@@ -1,4 +1,3 @@
-library(DT)
 
 ui <- basicPage(
   # All BBL Aggregate Info
@@ -6,20 +5,13 @@ ui <- basicPage(
   downloadButton("download_all", "Download Entire Dataset"),
   DTOutput("all_bbl_agg_info_tbl"),
   
+  # BBL Selector
   br(),
   textInput("bbl", "BBL", value = NULL),
   br(),
   
-  # Single BBL Details
+  # Single BBL Details Tables
   h2(textOutput("bbl_address")),
-  
-  h3("ECB Violation Details"),
-  downloadButton("download_ecb", "Download All ECB Violation Details for this Property"),
-  DTOutput("ecb_details_tbl"),
-  br(),
-  
-  h3("OATH Hearing Details"),
-  downloadButton("download_oath", "Download All OATH Hearing Details for this Property"),
-  DTOutput("oath_details_tbl"),
-  br()
+  detailsTableOutput("ecb_details_table", "ECB Violation"),
+  detailsTableOutput("oath_details_table", "OATH Hearing")
 )

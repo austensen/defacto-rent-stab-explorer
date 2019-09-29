@@ -1,5 +1,9 @@
-library(pool)
-library(config)
+library(pool) # Database Connection Pooling
+library(config) # Manage configuration values across multiple environments
+library(glue) # Interpreted string literals
+library(DT) # JS DataTables
+library(DBI) # Database interface
+
 
 # Connect to NYCDB --------------------------------------------------------
 
@@ -13,3 +17,8 @@ con <- dbPool(
   password = nycdb$password,
   port = nycdb$port
 )
+
+
+# Load Modules ------------------------------------------------------------
+
+source("details_module.R")
