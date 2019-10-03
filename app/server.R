@@ -16,16 +16,18 @@ server <- function(input, output, session) {
       hpd_comp_or_viol_apt,
       ecb_violation_count,
       oath_hearing_count,
+      dob_vacate_complaint_latest,
       hpd_vacate_order_count
     FROM defacto_bk_bbl_details
   ')
-  
+    
   output$all_bbl_agg_info_tbl = renderDT(
     all_bbl_agg_info[-1], 
     extensions = 'FixedColumns',
     escape = 1,
     filter = "top",
     selection = "none",
+    callback = JS(header_tooltip_js("bbl_agg")),
     options = list(
       dom = 'Brtip',
       scrollX = TRUE,
@@ -103,7 +105,5 @@ server <- function(input, output, session) {
     download_file_slug = "hpd-vacate-orders-details", 
     dataset_name = "HPD Vacate Orders"
   )
-  
-  
   
 }

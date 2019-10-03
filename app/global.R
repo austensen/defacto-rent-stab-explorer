@@ -21,4 +21,5 @@ con <- dbPool(
 
 # Load Modules ------------------------------------------------------------
 
+source("tool_tips.R")
 source("details_module.R")

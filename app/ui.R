@@ -12,7 +12,7 @@ ui <- basicPage(
   
   # Single BBL Details Tables
   h2(textOutput("bbl_address")),
-  detailsTableOutput("ecb_details_table", "ECB Violation"),
-  detailsTableOutput("oath_details_table", "OATH Hearing"),
+  detailsTableOutput("ecb_details_table", "ECB Violations"),
+  detailsTableOutput("oath_details_table", "OATH Hearings"),
   detailsTableOutput("hpdvacate_details_table", "HPD Vacate Orders")
 )

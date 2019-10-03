@@ -50,6 +50,7 @@ detailsTable <- function(input, output, session,
   output$details_table = renderDT(
     details_data()[-c(1:2)], # remove bbl and address cols
     selection = "none",
+    callback = JS(header_tooltip_js(details_col)), # see /tool_tips.R
     options = list(
       dom = 'Brtip',
       language = list(zeroRecords = glue("No data on {dataset_name} for this property")),
@@ -90,6 +91,7 @@ details_layout <- function(name = c("ecb_details", "oath_details", "hpdvacate_de
       hpdvacate_primary_reason text,
       hpdvacate_effective_date date,
       hpdvacate_rescind_date date,
+      hpdvacate_vacate_type text,
       hpdvacate_units_vacated integer"
   )
 }
