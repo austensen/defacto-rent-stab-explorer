@@ -6,3 +6,12 @@ default:
     password: 'xxx'
     port: 5432
     dbname: 'nycdb'
+
+shinyapps:
+  nycdbconnection:
+    driver: 'Postgres'
+    host: 'xxx'
+    user: 'xxx'
+    password: 'xxx'
+    port: 5432
+    dbname: 'xxx'
