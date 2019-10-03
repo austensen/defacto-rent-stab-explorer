@@ -1,5 +1,5 @@
-DROP MATERIALIZED VIEW IF EXISTS defacto_bk_bbl_details;
-CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
+DROP TABLE IF EXISTS defacto_bk_bbl_details;
+CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 	SELECT 
 		p.bbl,
 		(p.address || ', ' || p.borough || ', NY ' || p.zipcode) AS address,
@@ -15,7 +15,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 		coalesce(json_array_length(ecb.ecb_details), 0) as ecb_violation_count,
 		ecb.ecb_details,
 
-		-- TODO: figure out dob_complaints, see below
+		dob_c.dob_vacate_complaint_latest,
 
 		coalesce(json_array_length(oath.oath_details), 0) as oath_hearing_count,
 		oath.oath_details,
@@ -24,6 +24,8 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 		hpdvacate.hpdvacate_details
 	FROM pluto_18v2 AS p
 	LEFT JOIN LATERAL (
+		-- ECB Violations
+		-----------------
 		-- For each BBL get an indicator of the presence of any ECB violations for
 		-- illegal residential conversions, and all relevant details of the violation.
 		SELECT
@@ -59,26 +61,9 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 				)
 		) as ecb_inner
 	) AS ecb ON true
-	-- TODO: bbl is missing from dob_complaints, it only has bin, so 
-	-- would need to first join in BBL from the pad table
-	/* 
 	LEFT JOIN LATERAL (
-
-		-- For each BBL get an indicator of the presence of any DOB complaints for 
-		-- illegal units, and all relevant details of the complaint.
-		SELECT
-			true AS dob_complaint,
-			-- count(*) OVER() AS dob_complaint_count,
-			status AS dob_complaint_status,
-			inspectiondate AS dob_complaint_inspection_date,
-			dispositiondate AS dob_complaint_disposition_date
-		FROM dob_complaints
-		WHERE
-			bbl = p.bbl AND
-			complaintcategory = '71' -- "SRO – Illegal Work/No Permit/Change In Occupancy Use"
-	) AS dob_c ON true
-	*/
-	LEFT JOIN LATERAL (
+		-- OATH Hearings
+		----------------
 		-- For each BBL get an indicator of the presence of any OATH hearings for
 		-- illegal residential conversions, and all relevant details of the hearing.
 		SELECT
@@ -106,6 +91,8 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 			) as oath_inner
 	) AS oath ON true
 	LEFT JOIN LATERAL (
+		-- HPD Complaints/Violations
+		----------------------------
 		-- For each BBL get an indicator of the presence of any HPD complaints or 
 		-- violations, and a list of all apartment numbers if available.
 		SELECT
@@ -130,6 +117,8 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 		) AS cv
 	) AS hpd_cv ON true
 	LEFT JOIN LATERAL (
+		-- HPD Vacate Orders
+		--------------------
 		-- For each BBL get an indicator of the presence of any HPD Vacate Orders 
 		-- and all relevant details of the orders.
 		SELECT
@@ -139,11 +128,24 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 				primaryvacatereason AS hpdvacate_primary_reason,
 				vacateeffectivedate AS hpdvacate_effective_date,
 				rescinddate AS hpdvacate_rescind_date,
+				vacatetype AS hpdvacate_vacate_type,
 				numberofvacatedunits AS hpdvacate_units_vacated
 			FROM hpd_vacateorders
 			WHERE bbl = p.bbl -- test bbl: '3012090052'
 			) as hpdvacate_inner
 	) AS hpdvacate ON true
+	LEFT JOIN LATERAL (
+		-- DOB Complaints
+		-----------------
+		-- For each BBL get the date of the most recent DOB Complaint 
+		SELECT 
+			max(inspectiondate) AS dob_vacate_complaint_latest
+		FROM dob_complaints AS dob
+		INNER JOIN pad_adr AS pad
+			ON dob.bin::char(7) = pad.bin
+		WHERE pad.bbl = p.bbl AND -- test bbl: '3041150028'
+			complaintcategory = '71' -- "SRO – Illegal Work/No Permit/Change In Occupancy Use"
+	) AS dob_c ON true
 	WHERE 
 		p.bbl ~ '^3' AND
 		p.unitsres between 1 and 5 AND
@@ -153,3 +155,5 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS defacto_bk_bbl_details AS (
 		)
 	ORDER BY p.bbl
 );
+
+CREATE INDEX ON defacto_bk_bbl_details (bbl);
