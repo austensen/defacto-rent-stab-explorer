@@ -19,7 +19,7 @@ Once you have NYC-DB set up, you'll need to execute [`sql/defacto_bk_bbl_details
 psql -h hostname -U user -d nycdb -f sql/defacto_bk_bbl_details.sql
 ```
 
-You will also need to edit the file [`sample_config.yaml`](sample_config.yaml) to fill in these credentials for your local NYC-DB instance, then rename the file to `config.yaml`. 
+You will also need to edit the file [`config_sample.yaml`](config_sample.yaml) to fill in these credentials for your local NYC-DB instance, then rename the file to `config.yaml`. 
 
 From this point on there are two options for getting the app running locally:
 
