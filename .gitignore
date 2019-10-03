@@ -72,7 +72,10 @@ Temporary Items
 # Project-specific gitignore
 # ==========================
 config.yml
-/rsconnect/
+/app/rsconnect/
 /logs_for_inspection/
 todo.md
 shiny-server.conf
+defacto_table_dump.sql
+/data/
+nycdb_env.sh
