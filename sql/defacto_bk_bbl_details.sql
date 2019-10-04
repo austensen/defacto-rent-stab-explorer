@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 		FROM (
 			SELECT 
 				apartment,
-				count(*) OVER() AS hpd_complaint_count,
+				count(*)::int OVER() AS hpd_complaint_count,
 				NULL AS hpd_violation_count
 			FROM hpd_complaints
 			WHERE bbl = p.bbl
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 			SELECT 
 				apartment,
 				NULL AS hpd_complaint_count,
-				count(*) OVER() AS hpd_violation_count
+				count(*)::int OVER() AS hpd_violation_count
 			FROM hpd_violations
 			WHERE bbl = p.bbl
 		) AS cv
