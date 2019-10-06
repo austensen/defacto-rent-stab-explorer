@@ -25,6 +25,7 @@ bbl_tips <- c(
   "", # frist column has row numbers, and we don't include them
 	bbl = "Borough-Block-Lot property ID",
 	address = "Property Address",
+	year_built = "Year the property was built (not always reliable)",
 	residential_units = "Official number of residential units in property",
 	hpd_complaint_count = "Number of HPD complaints since 2013",
 	hpd_violation_count = "Number of HPD violations since 2012",

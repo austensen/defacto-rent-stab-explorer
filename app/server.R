@@ -11,6 +11,7 @@ server <- function(input, output, session) {
         onclick="Shiny.onInputChange(&quot;bbl_button&quot;, this.id)">%1$s</button>\', bbl) AS bbl_link,
       address,
       residential_units,
+      year_built,
       hpd_complaint_count,
       hpd_violation_count,
       hpd_comp_or_viol_apt,
@@ -67,8 +68,28 @@ server <- function(input, output, session) {
   
     clicked_bbl <- gsub("button_", "", input$bbl_button) # Get bbl out of button id
     updateTextInput(session, "bbl", value = clicked_bbl)
+    
+    # Move  to details tab
+    updateTabsetPanel(session, "inTabset", selected = "detailsTab")
   })
   
+
+  # Single BBL Overview Table -----------------------------------------------
+
+  single_bbl_overview <- reactive({
+    req(input$bbl)
+    all_bbl_agg_info[all_bbl_agg_info[["bbl"]] == input$bbl, ]
+  })
+  
+  output$single_bbl_agg_info_tbl = renderDT(
+    single_bbl_overview()[-2],
+    selection = "none",
+    callback = JS(header_tooltip_js("bbl_agg")),
+    options = list(
+      dom = 'Brtip',
+      scrollX = TRUE
+    )
+  )
 
   # ECB Violation Details ---------------------------------------------------
   
