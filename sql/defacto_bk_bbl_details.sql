@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 		p.bbl,
 		(p.address || ', ' || p.borough || ', NY ' || p.zipcode) AS address,
 		p.unitsres AS residential_units,
+		p.yearbuilt AS year_built,
 
 		coalesce(hpd_cv.hpd_complaint_count, 0) AS hpd_complaint_count,
 		coalesce(hpd_cv.hpd_violation_count, 0) AS hpd_violation_count,
@@ -103,7 +104,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 		FROM (
 			SELECT 
 				apartment,
-				count(*)::int OVER() AS hpd_complaint_count,
+				count(*) OVER()::int AS hpd_complaint_count,
 				NULL AS hpd_violation_count
 			FROM hpd_complaints
 			WHERE bbl = p.bbl
@@ -111,7 +112,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 			SELECT 
 				apartment,
 				NULL AS hpd_complaint_count,
-				count(*)::int OVER() AS hpd_violation_count
+				count(*) OVER()::int AS hpd_violation_count
 			FROM hpd_violations
 			WHERE bbl = p.bbl
 		) AS cv
