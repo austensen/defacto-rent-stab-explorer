@@ -1,11 +1,15 @@
 default:
   nycdbconnection:
     driver: 'Postgres'
-    host: 'localhost' # use 'host.docker.internal' if running locally in docker
+    host: 'localhost'
     user: 'xxx'
     password: 'xxx'
     port: 5432
     dbname: 'nycdb'
+
+docker:
+  nycdbconnection:
+    host: 'host.docker.internal'
 
 shinyapps:
   nycdbconnection:
