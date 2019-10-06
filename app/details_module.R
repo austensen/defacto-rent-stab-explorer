@@ -9,8 +9,7 @@ detailsTableOutput <- function(id, dataset_name) {
   tagList(
     h3(dataset_name),
     downloadButton(ns("details_download"), glue("Download All {dataset_name} for this Property")),
-    DTOutput(ns("details_table")),
-    br() 
+    DTOutput(ns("details_table"))
   )
 }
 

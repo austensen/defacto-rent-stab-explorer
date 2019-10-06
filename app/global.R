@@ -3,6 +3,7 @@ library(config) # Manage configuration values across multiple environments
 library(glue) # Interpreted string literals
 library(DT) # JS DataTables
 library(DBI) # Database interface
+library(markdown) # Render markdown
 
 
 # Connect to NYCDB --------------------------------------------------------

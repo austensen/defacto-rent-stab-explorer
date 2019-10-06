@@ -61,6 +61,6 @@ hpdvacate_tips <- c(
 	hpdvacate_primary_reason = "Primary reason the unit/building is vacated",
 	hpdvacate_effective_date = "The date the Order to Repair/Vacate Order was made effective",
 	hpdvacate_rescind_date = "The date the Order to Repair/Vacate Order was rescinded",
-	hpdvacate_vacate_type = "Area affected by the vacate. Valid values are F (Entire Building) and P (Partial)",
+	hpdvacate_vacate_type = "Area affected by the vacate (Entire Building or Partial)",
 	hpdvacate_units_vacated = "Number of units vacated"
 )
