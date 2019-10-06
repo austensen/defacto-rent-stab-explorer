@@ -24,3 +24,5 @@ con <- dbPool(
 
 source("tool_tips.R")
 source("details_module.R")
+
+enableBookmarking("url")

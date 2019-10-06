@@ -1,6 +1,33 @@
 
 server <- function(input, output, session) {
 
+  # Bookmarking -------------------------------------------------------------
+
+  # Only want to include bbl input for bookmark url, so exclude all others
+  ExcludedIDs <- reactiveVal(value = NULL)
+  
+  observe({
+    toExclude <- setdiff(names(input), "bbl")
+    setBookmarkExclude(toExclude)
+    ExcludedIDs(toExclude)
+  })
+  
+  # Update the url with each bbl input change
+  observe({
+    bbl <- reactiveValuesToList(input)$bbl
+    if (bbl != "") session$doBookmark()
+  })
+  
+  onBookmarked(function(url) {
+    updateQueryString(url)
+  })
+  
+  # Restore to details tab
+  onRestored(function(state) {
+    updateTabsetPanel(session, "inTabset", selected = "detailsTab")
+  })
+  
+  
   # Aggregate BBL Info ------------------------------------------------------
   
   # add button to table: https://stackoverflow.com/a/45739826/7051239 
@@ -87,6 +114,7 @@ server <- function(input, output, session) {
     callback = JS(header_tooltip_js("bbl_agg")),
     options = list(
       dom = 'Brtip',
+      language = list(zeroRecords = "Please select a BBL"),
       scrollX = TRUE
     )
   )
