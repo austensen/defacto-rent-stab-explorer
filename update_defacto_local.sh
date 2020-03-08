@@ -4,6 +4,10 @@
 # update_defacto_local.sh
 # update defacto_remote.sh
 
+# get variables for database connections
+# edit nycdb_env_sample.sh for your information and and save it as nycdb_env.sh
+source ./nycdb_env.sh
+
 # These scripts are designed to update all the tables used for the app in your
 # local nycdb instance, then to recreate the derived table used for the app, 
 # and finally push the updated table into a remote database for hosting the app.

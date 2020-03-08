@@ -19,14 +19,14 @@ export PGPASSWORD="$NYCDB_LOCAL_PASSWORD"
 # check if pluto already exists in local database, if it does not then download/load it
 
 PLUTO_EXISTS=`psql -q -t -U "$NYCDB_LOCAL_USER" -d "$NYCDB_LOCAL_DATABASE" -h "$NYCDB_LOCAL_HOST" \
-	-c "SELECT 'TRUE' FROM pg_catalog.pg_tables where tablename = 'pluto_18v2';"`
+	-c "SELECT 'TRUE' FROM pg_catalog.pg_tables where tablename = 'pluto_19v1';"`
 
 if [[ "$PLUTO_EXISTS" != *"TRUE"* ]]; then
 	echo "$PLUTO_EXISTS"
 	nycdb -U "$NYCDB_LOCAL_USER" -D "$NYCDB_LOCAL_DATABASE" -H "$NYCDB_LOCAL_HOST" -P "$NYCDB_LOCAL_PASSWORD" \
-		--download pluto_18v2
+		--download pluto_19v1
 	nycdb -U "$NYCDB_LOCAL_USER" -D "$NYCDB_LOCAL_DATABASE" -H "$NYCDB_LOCAL_HOST" -P "$NYCDB_LOCAL_PASSWORD" \
-		--load pluto_18v2
+		--load pluto_19v1
 fi
 
 
@@ -38,14 +38,14 @@ PAD_EXISTS=`psql -q -t -U "$NYCDB_LOCAL_USER" -d "$NYCDB_LOCAL_DATABASE" -h "$NY
 if [[ "$PAD_EXISTS" != *"TRUE"* ]]; then
 	echo "$PAD_EXISTS"
 	nycdb -U "$NYCDB_LOCAL_USER" -D "$NYCDB_LOCAL_DATABASE" -H "$NYCDB_LOCAL_HOST" -P "$NYCDB_LOCAL_PASSWORD" \
-		--download pad_adr
+		--download pad
 	nycdb -U "$NYCDB_LOCAL_USER" -D "$NYCDB_LOCAL_DATABASE" -H "$NYCDB_LOCAL_HOST" -P "$NYCDB_LOCAL_PASSWORD" \
-		--load pad_adr
+		--load pad
 fi
 
 
 # locally rebuild each of the tables that are frequently updated
-for table in hpd_complaints hpd_violations ecb_violations dob_violations oath_hearings hpd_vacateorders; do
+for table in hpd_complaints hpd_violations ecb_violations dob_violations dob_complaints oath_hearings hpd_vacateorders; do
 	echo "$table"
 
 	psql -U "$NYCDB_LOCAL_USER" -d "$NYCDB_LOCAL_DATABASE" -h "$NYCDB_LOCAL_HOST" \

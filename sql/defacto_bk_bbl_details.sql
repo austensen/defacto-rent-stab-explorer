@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS defacto_bk_bbl_details AS (
 
 		coalesce(json_array_length(hpdvacate.hpdvacate_details), 0) as hpd_vacate_order_count,
 		hpdvacate.hpdvacate_details
-	FROM pluto_18v2 AS p
+	FROM pluto_19v1 AS p
 	LEFT JOIN LATERAL (
 		-- ECB Violations
 		-----------------
