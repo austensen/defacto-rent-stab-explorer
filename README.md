@@ -8,8 +8,8 @@ The app is built on top of the critical work done by [@aepyornis](https://github
 
 <a href="https://maxwell-austensen.shinyapps.io/defacto/">
 	<p float="left">
-		<img src="img/app-screenshot-overview.png" width="440" />
-		<img src="img/app-screenshot-details.png" width="440" /> 
+		<img src="img/app-screenshot-overview.png" width="430" />
+		<img src="img/app-screenshot-details.png" width="430" /> 
 	</p>
 </a>
 
